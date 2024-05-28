@@ -1,0 +1,4 @@
+---
+- include_tasks: "burp.yml"
+- include_tasks: "firefox.yml"
+...

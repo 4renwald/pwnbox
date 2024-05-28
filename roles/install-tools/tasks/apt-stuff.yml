@@ -1,0 +1,16 @@
+---
+- name: "Installing Packages"
+  package:
+    name:
+      - jq
+      - pipx
+      - ntpdate
+      - flameshot
+      - exiftool
+      - lolcat
+      - rsyslog
+      - chromium
+    state: latest
+  become: true
+  become_method: sudo
+...

@@ -1,0 +1,21 @@
+- name: "Installing nori version 2.6.0"
+  gem:
+    name: nori
+    version: '2.6.0'
+
+- name: "Installing the latest versions of other gems"
+  gem:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - logger
+    - stringio
+    - winrm
+    - builder
+    - erubi
+    - gssapi
+    - gyoku
+    - httpclient
+    - logging
+    - little-plugger
+...

@@ -1,0 +1,49 @@
+---
+- name: "Copy .bashrc and .zshrc config files to home directory"
+  copy:
+    src: "{{ role_path }}/files/{{ item }}"
+    dest: "{{ ansible_env.HOME }}"
+  loop:
+    - .bashrc
+    - .zshrc
+
+- name: "Copy vpn-.sh files"
+  copy:
+    src: "{{ role_path }}/files/{{ item }}"
+    dest: /opt
+    mode: '0755'
+  become: true
+  loop:
+    - vpnbash.sh
+    - vpnpanel.sh
+    - vpnserver.sh
+    - banner.sh
+    - banner
+
+- name: "Read current mate terminal profiles"
+  dconf:
+    key: "/org/mate/terminal/global/profile-list"
+    state: "read"
+  register: "profile_list"
+
+- name: "profile_list was not set, setting"
+  set_fact:
+    profile_list: 
+      value: '["default"]'
+  when: profile_list.value is none
+
+- name: "Adding new profile"
+  set_fact:
+    new_profile_list: "{{ profile_list.value | regex_replace(']$', \", 'htb']\") }}"
+
+- name: "Writing updated profile list"
+  dconf:
+    key: "/org/mate/terminal/global/profile-list"
+    value: "{{ new_profile_list }}"
+  when: "'htb' not in profile_list.value"
+  
+- name: "Restoring htb profile from dump"
+  shell:
+    cmd: "dconf load /org/mate/terminal/profiles/htb/ < {{ role_path }}/files/dconf-dump-htb"
+  when: "'htb' not in profile_list.value"
+...

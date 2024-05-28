@@ -1,0 +1,37 @@
+---
+- name: "Copy themes folder"
+  unarchive:
+    src: "{{ role_path }}/files/usr/share/themes.tar.gz/"
+    dest: "/usr/share/"
+  become: true
+
+- name: "Copy icons folder"
+  unarchive:
+    src: "{{ role_path }}/files/usr/share/icons.tar.gz/"
+    dest: "/usr/share/"
+  become: true
+
+- name: "Copy Bloodhound and Sublimetext configs"
+  copy:
+    src: "{{ role_path }}/files/opt/{{item}}/"
+    dest: "/opt/bloodhound/"
+  become: true
+  loop:
+    - bloodhound
+    - sublime_text
+
+- name: "Copy .config folder to home directory"
+  unarchive:
+    src: "{{ role_path }}/files/config.tar.gz/"
+    dest: "{{ ansible_env.HOME }}/"
+
+- name: "Coppy mimeapps.list"
+  copy:
+    src: "{{ role_path }}/files/mimeapps.list"
+    dest: "{{ ansible_env.HOME }}/.local/share/applications/"
+
+- name: "Copy useful folders"
+  shell:
+    cmd: "cat {{ role_path }}/files/opt/useful.tar.gz.a* | tar -xzvf - -C /opt"
+  become: true
+...
