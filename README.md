@@ -32,5 +32,3 @@ source pwnbox/bin/activate
 yes | pip3 install ansible pipx
 ansible-playbook main.yml
 ```
-## Contributing
-If I missed some configurations or you want to contribute, don't mind opening a PR or message me.
